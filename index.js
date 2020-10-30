@@ -14,8 +14,9 @@ function fastifyAmqp (fastify, opts, next) {
   const user = opts.user || 'guest'
   const pass = opts.pass || 'guest'
   const timeout = opts.timeout || 10000
-
-  amqpClient.connect(`amqp://${user}:${pass}@${host}:${port}`, { timeout }, function (err, connection) {
+  const ssl = opts.ssl || false
+  const url = opts.url || `${ssl?'amqps':'amqp'}://${user}:${pass}@${host}:${port}` // RabbitMQ url overrides other connection options
+  amqpClient.connect(url, { timeout }, function (err, connection) {
     if (err) {
       next(err)
       return
@@ -30,6 +31,9 @@ function fastifyAmqp (fastify, opts, next) {
       }
 
       fastify.decorate('amqpChannel', channel)
+      if (opts.decorateRequest) {
+          fastify.decorateRequest('amqpChannel', channel)
+      }
       next()
     })
   })
