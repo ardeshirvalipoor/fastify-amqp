@@ -39,6 +39,10 @@ fastify.register(require('fastify-amqp'), {
   pass: 'guest'
   // the default value is empty
   vhost: ''
+  url: 'amqps://xhdyuetsj:9PcF4w4k8XsdhGOOaGFZ5XSE_TfTESnL@bonobo.rmq.cloudamqp.com/xhdyuetsj'
+  // url will override the options above, default: undefined
+  decorateRequest: false
+  // default: false
 })
 
 fastify.get('/', function (request, reply) {
